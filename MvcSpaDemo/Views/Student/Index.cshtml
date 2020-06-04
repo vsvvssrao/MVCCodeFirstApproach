@@ -1,0 +1,34 @@
+﻿@{
+    Layout = null;
+}
+
+<h4>Students</h4>
+
+<div class="row">
+    <a href="#/Student/Add">Add Student</a>
+</div>
+
+<div class="row">
+    <div id="StudentDiv">
+    </div>
+</div>
+
+<script>
+    $(function () {
+        GetStudents();
+    });
+
+    function GetStudents() {
+        $.get("/Student/_Index/", function (data) {
+            $("#StudentDiv").html(data);
+        });
+    }
+
+    function DeleteStudent(studentID) {
+        if (confirm("Delete student?")) {
+            $.get("/Student/Delete/", { studentID: studentID }, function (data) {
+                GetStudents();
+            });
+        }
+    }
+</script>

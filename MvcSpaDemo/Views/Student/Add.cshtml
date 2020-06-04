@@ -1,0 +1,88 @@
+﻿@model MvcSpaDemo.Entities.Student
+@{
+    ViewBag.Title = "Add";
+    Layout = null;
+
+    // We use same page for add and edit.
+    var urlPostString = "/Student/Create";
+    if (ViewBag.Status == "Edit")
+    {
+        urlPostString = "/Student/Update";
+    }
+}
+
+<h2>@ViewBag.Status Student</h2>
+
+<form id="frmStudent" name="frmStudent" method="post" action="#@urlPostString">
+    @Html.HiddenFor(x => x.StudentID)
+    <div class="row">
+        <div class="form-group">
+            <label for="Variables">First Name</label>
+            @Html.TextBoxFor(x => x.FirstName, new { @class = "form-control square" })
+            @Html.ValidationMessageFor(x => x.FirstName)
+        </div>
+        <div class="form-group">
+            <label for="Variables">Last Name</label>
+            @Html.TextBoxFor(x => x.LastName, new { @class = "form-control square" })
+            @Html.ValidationMessageFor(x => x.LastName)
+        </div>
+        <div class="form-group">
+            <label for="Variables">Email</label>
+            @Html.TextBoxFor(x => x.Email, new { @class = "form-control square" })
+            @Html.ValidationMessageFor(x => x.Email)
+        </div>
+        <div class="form-group">
+            <label for="Variables">Class</label>
+            @Html.TextBoxFor(x => x.Class, new { @class = "form-control square" })
+            @Html.ValidationMessageFor(x => x.Class)
+        </div>
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary" value="Submit" />
+        </div>
+    </div>
+</form>
+
+<script>
+    $("#frmStudent").on("submit", function (e) {
+        debugger;
+        //if ($("#frmStudent").valid()) {
+        routingApp.runRoute('post', '#@urlPostString');
+        e.preventDefault();
+        e.stopPropagation();
+        //}
+    });
+
+    // add dynamic create or update link
+
+    debugger;
+    if (IfLinkNotExist("POST", "#@urlPostString")) {
+        routingApp.post("#@urlPostString", function (context) {
+            //$("#BigLoader").modal('show');
+            var formData = new FormData($('#frmStudent')[0]);
+            $.ajax({
+                url: '@urlPostString',
+                data: formData,
+                type: "POST",
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    //$("#BigLoader").modal('hide');
+                    if (data) {
+                        if ('@ViewBag.Status' == 'Add')
+                            alert("Student successfully added");
+                        else if ('@ViewBag.Status' == 'Edit')
+                            alert("Student successfully updated");
+                        window.location.href = "#/Student/Index";
+                    }
+                    else {
+                        alert('Something went wrong. All fields are required.');
+                    }
+                },
+                error: function () {
+                    alert('Something went wrong');
+                }
+            });
+        });
+    }
+
+</script>
